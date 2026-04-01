@@ -1,11 +1,21 @@
+const {error} = require("node:console");
 const post = require("./../data/posts");
 
 function index(req, res) {
-  res.send("Lista Post");
+  const postList = {
+    "Numero dei post": post.length,
+    "Lista dei Post": post,
+  };
+  res.json(postList);
 }
 
 function show(req, res) {
-  res.send(`Dettagli del Post ${req.params.id}`);
+  const postId = parseInt(req.params.id);
+  const singlePost = post.find((element) => {
+    return element.id === postId;
+  });
+
+  res.json(singlePost);
 }
 
 function store(req, res) {
@@ -17,7 +27,25 @@ function update(req, res) {
 }
 
 function destroy(req, res) {
-  res.send(`Eliminazione del Post ${req.params.id}`);
+  const postId = parseInt(req.params.id);
+  const deletePost = post.find((element) => {
+    return element.id === postId;
+  });
+
+  if (!deletePost) {
+    res.status(404);
+
+    return res.json({
+      status: 404,
+      error: "Not found",
+      message: "Pizza non trovata",
+    });
+  }
+
+  post.splice(post.indexOf(deletePost), 1);
+
+  res.sendStatus(204);
+  console.log(post);
 }
 
 module.exports = {index, show, store, update, destroy};
