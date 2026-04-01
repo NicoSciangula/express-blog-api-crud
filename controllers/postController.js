@@ -6,7 +6,14 @@ function index(req, res) {
     "Numero dei post": post.length,
     "Lista dei Post": post,
   };
-  res.json(postList);
+
+  let filteredPost = postList;
+  if (req.query.tags) {
+    filteredPost = post.filter((singlePost) => {
+      return singlePost.tags.includes(req.query.tags);
+    });
+  }
+  res.json(filteredPost);
 }
 
 function show(req, res) {
