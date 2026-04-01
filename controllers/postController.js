@@ -22,6 +22,16 @@ function show(req, res) {
     return element.id === postId;
   });
 
+  if (!singlePost) {
+    res.status(404);
+
+    return res.json({
+      status: 404,
+      error: "Not found",
+      message: "Post non trovata",
+    });
+  }
+
   res.json(singlePost);
 }
 
@@ -45,7 +55,7 @@ function destroy(req, res) {
     return res.json({
       status: 404,
       error: "Not found",
-      message: "Pizza non trovata",
+      message: "Post non trovata",
     });
   }
 
