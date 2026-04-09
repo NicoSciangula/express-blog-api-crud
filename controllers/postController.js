@@ -1,4 +1,3 @@
-const {error} = require("node:console");
 const post = require("./../data/posts");
 
 function index(req, res) {
@@ -36,7 +35,23 @@ function show(req, res) {
 }
 
 function store(req, res) {
-  res.send("Creazione nuovo Post");
+  console.log(req.body);
+  // res.send("Creazione nuovo Post");
+  const newId = Date.now();
+
+  const newPost = {
+    id: newId,
+    title: req.body.title,
+    content: req.body.content,
+    tags: req.body.tags,
+  };
+
+  post.push(newPost);
+
+  console.log(post);
+
+  res.status(201);
+  res.json(newPost);
 }
 
 function update(req, res) {
