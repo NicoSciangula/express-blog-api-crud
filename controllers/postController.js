@@ -1,20 +1,18 @@
 const post = require("./../data/posts");
 
-function index(req, res) {
-  const postList = {
-    "Numero dei post": post.length,
-    "Lista dei Post": post,
-  };
+const connection = require("./../data/db");
 
-  let filteredPost = postList;
-  if (req.query.tags) {
-    filteredPost = post.filter((singlePost) => {
-      return singlePost.tags.includes(req.query.tags);
-    });
-  }
-  res.json(filteredPost);
+// * INDEX
+function index(req, res) {
+  const sql = "SELECT * FROM posts";
+
+  connection.query(sql, (err, results) => {
+    if (err) return res.status(500).json({ error: "Database query failed" });
+    res.results;
+  });
 }
 
+// * SHOW
 function show(req, res) {
   const postId = parseInt(req.params.id);
   const singlePost = post.find((element) => {
@@ -97,4 +95,4 @@ function destroy(req, res) {
   console.log(post);
 }
 
-module.exports = {index, show, store, update, destroy};
+module.exports = { index, show, store, update, destroy };
