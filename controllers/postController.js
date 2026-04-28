@@ -1,4 +1,4 @@
-const post = require("./../data/posts");
+// const post = require("./../data/posts");
 
 const connection = require("./../data/db");
 
@@ -8,7 +8,7 @@ function index(req, res) {
 
   connection.query(sql, (err, results) => {
     if (err) return res.status(500).json({ error: "Database query failed" });
-    res.results;
+    res.json(results);
   });
 }
 
@@ -71,25 +71,14 @@ function update(req, res) {
 
 // * DESTROY
 function destroy(req, res) {
-  const postId = parseInt(req.params.id);
-  const deletePost = post.find((element) => {
-    return element.id === postId;
+  const { id } = req.params;
+
+  const sql = "DELETE FROM posts WHERE id = ?";
+
+  connection.query(sql, [id], (err, results) => {
+    if (err) return res.status(500).json({ error: "Database query failed" });
+    res.sendStatus(204);
   });
-
-  if (!deletePost) {
-    res.status(404);
-
-    return res.json({
-      status: 404,
-      error: "Not found",
-      message: "Post non trovata",
-    });
-  }
-
-  post.splice(post.indexOf(deletePost), 1);
-
-  res.sendStatus(204);
-  console.log(post);
 }
 
 module.exports = { index, show, store, update, destroy };
