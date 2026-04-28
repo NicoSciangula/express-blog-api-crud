@@ -14,24 +14,19 @@ function index(req, res) {
 
 // * SHOW
 function show(req, res) {
-  const postId = parseInt(req.params.id);
-  const singlePost = post.find((element) => {
-    return element.id === postId;
+  const { id } = req.params;
+
+  const sql = "SELECT * FROM posts WHERE id = ?";
+
+  connection.query(sql, [id], (err, results) => {
+    if (err) return res.status(500).json({ error: "Database query failed" });
+    if (results.length === 0)
+      return res.status(404).json({ error: "Post not found" });
+    res.json(results[0]);
   });
-
-  if (!singlePost) {
-    res.status(404);
-
-    return res.json({
-      status: 404,
-      error: "Not found",
-      message: "Post non trovata",
-    });
-  }
-
-  res.json(singlePost);
 }
 
+// * STORE
 function store(req, res) {
   console.log(req.body);
   // res.send("Creazione nuovo Post");
@@ -52,6 +47,7 @@ function store(req, res) {
   res.json(newPost);
 }
 
+// * UPDATE
 function update(req, res) {
   // res.send(`Modifica integrale del Post ${req.params.id}`);
   const id = parseInt(req.params.id);
@@ -73,6 +69,7 @@ function update(req, res) {
   res.json(updatePost);
 }
 
+// * DESTROY
 function destroy(req, res) {
   const postId = parseInt(req.params.id);
   const deletePost = post.find((element) => {
